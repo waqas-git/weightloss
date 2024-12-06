@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct ExerciseListViewModifier: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+struct ExerciseListViewModifier: ViewModifier {
+    // 2
+    func body(content: Content) -> some View {
+      content
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
+            .listRowInsets(EdgeInsets(top: 7, leading: 20, bottom: 7, trailing: 20)) // Adjust these values as needed
     }
-}
-
-#Preview {
-    ExerciseListViewModifier()
 }
