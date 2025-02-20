@@ -23,6 +23,8 @@ struct ExerciseHCell: View {
                 .font(.headline)
                 .fontWeight(.semibold)
                 .foregroundColor(.primary)
+                .lineLimit(2) // Allow up to 2 lines of text
+                .fixedSize(horizontal: false, vertical: true) // Wrap text to fit vertically
         }
     }
 }

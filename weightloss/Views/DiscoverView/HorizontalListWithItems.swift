@@ -7,12 +7,44 @@
 
 import SwiftUI
 
-struct HorizontalListWithItems: View {
+struct HorizontalListWithItems<Item: Hashable, Content: View>: View {
+    let items: [Item]
+    let rows: [GridItem]
+    let cellWidth: CGFloat
+    let cellSpacing: CGFloat
+    let height: CGFloat
+    let content: (Item) -> Content
+    
+    init(
+        items: [Item],
+        rows: [GridItem],
+        cellWidth: CGFloat,
+        cellSpacing: CGFloat = 10,
+        height: CGFloat,
+        @ViewBuilder content: @escaping (Item) -> Content
+    ) {
+        self.items = items
+        self.rows = rows
+        self.cellWidth = cellWidth
+        self.cellSpacing = cellSpacing
+        self.height = height
+        self.content = content
+    }
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView(.horizontal, showsIndicators: false) {
+            LazyHGrid(rows: rows, spacing: cellSpacing) {
+                ForEach(items, id: \.self) { item in
+                    content(item)
+                        .frame(width: cellWidth)
+                }
+            }
+            .padding(10)
+        }
+        .frame(height: height)
     }
 }
 
 #Preview {
-    HorizontalListWithItems()
+    //HorizontalListWithItems()
 }

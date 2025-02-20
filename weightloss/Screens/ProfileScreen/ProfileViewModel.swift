@@ -48,4 +48,11 @@ class ProfileViewModel: ObservableObject {
                ]
            )
        ]
+    
+    @Published var myProfileData: [MyProfileData] = [
+        MyProfileData(type: .height, title: "Height", value: "0cm"),
+        MyProfileData(type: .weight, title: "Current Weight", value: "0Kg"),
+        MyProfileData(type: .weight, title: "Target Weight", value: "0Kg"),
+        MyProfileData(type: .gender, title: "Gender", value: "Male")
+    ]
 }

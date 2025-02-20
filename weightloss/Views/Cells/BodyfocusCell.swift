@@ -10,6 +10,7 @@ import SwiftUI
 struct BodyfocusCell: View {
     var title: String = "Bodyfocus"
     var image: String = "without_bg"
+    var viewHeight: CGFloat = 200
     var body: some View {
         ZStack{
             RoundedRectangle(cornerRadius: 10)
@@ -30,7 +31,7 @@ struct BodyfocusCell: View {
                     }
                 }
         }
-        //.frame(width: 200, height: 200)
+        .frame(height: viewHeight)
     }
 }
 

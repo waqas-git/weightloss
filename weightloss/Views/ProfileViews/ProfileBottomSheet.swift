@@ -9,8 +9,8 @@ import SwiftUI
 
 //<Content: View> is generic view. Its means bottom sheet can accept any type of view to show in it.
 struct ProfileBottomSheet<Content: View>: View {
-    let content: Content
-    let title : String
+    var content: Content
+    var title : String
     @Binding var isPresented: Bool
     
     init(title: String, isPresented: Binding<Bool>, @ViewBuilder content: () -> Content) {
@@ -20,38 +20,49 @@ struct ProfileBottomSheet<Content: View>: View {
     }
     
     var body: some View {
-        VStack{
-            HStack{
-                Text(title)
-                    .font(.headline)
-                    .padding(.leading, 20)
-                Spacer()
-                Button (action: {
-                    isPresented = false
-                }){
-                    Image(systemName: "xmark")
-                        .foregroundStyle(Color.black)
-                        .padding(.trailing, 20)
-                }
-            }
-            .padding(.top, 10)
-            
-            Divider()
-            content
-            
-            Button(action: {
-                isPresented = false
-            }) {
-                Text("SAVE")
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundStyle(.black)
-                    .frame(maxWidth: .infinity)
+        if isPresented {
+            GeometryReader{geometry in
+                VStack{
+                    Spacer()
+                    HStack{
+                        Text(title)
+                            .font(.headline)
+                            .padding(.leading, 20)
+                        Spacer()
+                        Button (action: {
+                            isPresented = false
+                        }){
+                            Image(systemName: "xmark")
+                                .foregroundStyle(Color.black)
+                                .padding(.trailing, 20)
+                        }
+                    }
+                    .padding(.top, 10)
+                    
+                    content
+                    
+                    Button(action: {
+                        isPresented = false
+                    }) {
+                        Text("SAVE")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundStyle(.black)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.green)
+                            .cornerRadius(30)
+                            .padding(20)
+                    }
                     .padding()
-                    .background(Color.green)
-                    .cornerRadius(30)
-                    .padding(20)
+                }
+                .frame(width: geometry.size.width)
+                .background(Color.white)
+                .cornerRadius(20)
+                .shadow(radius: 10)
+                .transition(.move(edge: .bottom))
+                .animation(.easeInOut)
             }
-            .padding()
+            .edgesIgnoringSafeArea(.bottom)
         }
     }
 }

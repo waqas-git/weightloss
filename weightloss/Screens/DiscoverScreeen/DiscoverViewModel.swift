@@ -12,12 +12,14 @@ class DiscoverViewModel: ObservableObject {
     @Published var foryouItems : [ProfileItem] = []
     @Published var trainingGoalsItems : [Goal] = []
     @Published var focusGridItems : [Goal] = []
+    @Published var durationAndIntensityItems : [ProfileSections] = []
     
     init () {
         loadRelaxHStackItems()
         loadForyouHGridItems()
         loadTrainingGoalHStackItems()
         loadBodyFocusGridItems()
+        loadDuration_IntensityItems()
     }
     func loadRelaxHStackItems() {
         relaxStretchItems = [
@@ -52,11 +54,35 @@ class DiscoverViewModel: ObservableObject {
     
     func loadBodyFocusGridItems() {
         focusGridItems = [
-        Goal(name: "Full body", icon: "without_bg"),
-        Goal(name: "Arm", icon: "without_bg"),
-        Goal(name: "Core", icon: "without_bg"),
-        Goal(name: "Butt & legs", icon: "without_bg")
+            Goal(name: "Full body", icon: "without_bg"),
+            Goal(name: "Arm", icon: "without_bg"),
+            Goal(name: "Core", icon: "without_bg"),
+            Goal(name: "Butt & legs", icon: "without_bg")
         ]
     }
+    
+    func loadDuration_IntensityItems(){
+        durationAndIntensityItems = [
+            // Workout Section
+            ProfileSections(
+                title: "Duration",
+                items: [
+                    ProfileItem(icon: "clock.circle.fill", title: "Less than 7 minutes", subtitle: nil, actionIcon: nil),
+                    ProfileItem(icon: "clock.circle.fill", title: "Longer than 7 minutes", subtitle: nil, actionIcon: nil)
+                ]
+            ),
+            
+            // General Settings Section
+            ProfileSections(
+                title: "Intensity",
+                items: [
+                    ProfileItem(icon: "lineweight", title: "Begginers", subtitle: nil, actionIcon: nil),
+                    ProfileItem(icon: "lineweight", title: "Intermediate", subtitle: nil, actionIcon: nil),
+                    ProfileItem(icon: "lineweight", title: "Advanced", subtitle: nil, actionIcon: nil)
+                ]
+            )
+        ]
+    }
+
     
 }

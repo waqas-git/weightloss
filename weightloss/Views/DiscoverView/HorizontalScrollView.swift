@@ -7,12 +7,40 @@
 
 import SwiftUI
 
-struct HorizontalScrollView: View {
+struct HorizontalScrollView<Item: Hashable, Content: View>: View {
+    let items: [Item]
+    let cellWidth: CGFloat
+    let height: CGFloat
+    let content: (Item) -> Content
+    
+    init(
+        items: [Item],
+        cellWidth: CGFloat,
+        height: CGFloat,
+        @ViewBuilder content: @escaping (Item) -> Content
+    ) {
+        self.items = items
+        self.cellWidth = cellWidth
+        self.height = height
+        self.content = content
+    }
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        GeometryReader { _ in
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    ForEach(items, id: \.self) { item in
+                        content(item)
+                            .frame(width: cellWidth)
+                    }
+                }
+                .padding(10)
+            }
+        }
+        .frame(height: height)
     }
 }
 
 #Preview {
-    HorizontalScrollView()
+    //HorizontalScrollView()
 }

@@ -21,148 +21,112 @@ struct DiscoverScreen: View {
     ]
     
     @StateObject private var viewModel = DiscoverViewModel()
+    @State private var currentTitle: String = "Discover" // Track current title
+    @State private var scrollDirection: ScrollDirection = .none
+    enum ScrollDirection {
+        case up, down, none
+    }
+    
+    @State private var lastScrollOffset: CGFloat = 0
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading) {
                     BannerCell(title1: "Slime down", title2: "your face", subTitle: "Reduce cheek fat, get face \nslimmed down", image: "slim_down_face", isButtonEnabled: false)
                     
-                    Text("Relax")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.primary)
-                        .padding(.leading, 10)
-                        .padding(.top, 20)
-                    
-                    GeometryReader { geometry in
-                        let cellWidth = geometry.size.width / 2.5
-                        
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 10) { // Adjust spacing as needed
-                                ForEach(viewModel.relaxStretchItems, id: \.self) { item in
-                                    ExerciseHCell(image: item.icon, title: item.name)
-                                        .frame(width: cellWidth)
-                                }
-                            }
-                            .padding(.horizontal, 10) // Optional padding around the list
-                        }
+                    TrackableText(currentTitle: $currentTitle, title: "Relax")
+                    HorizontalScrollView(
+                        items: viewModel.relaxStretchItems,
+                        cellWidth: UIScreen.main.bounds.width / 2.5,
+                        height: 160
+                    ) { item in
+                        ExerciseHCell(image: item.icon, title: item.name)
                     }
-                    .frame(height: 160) // Adjust height to fit your content
                     
-                    Text("Picks for you")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.primary)
-                        .padding(.leading, 10)
-                        .padding(.top, 20)
-                    
-                    GeometryReader{ geometry in
-                        let cellwidth = geometry.size.width / 1.15
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            LazyHGrid(rows: foryouRows, spacing: 10) {
-                                ForEach(viewModel.foryouItems, id: \.self) { item in
-                                    ForYouHCell(image: item.icon, title: item.title, subTitle: item.subtitle ?? "")
-                                        .frame(width: cellwidth)
-                                }
-                            }
-                            .padding(10)
-                        }
-                        
-                    }.frame(height: 360) // Set the height to fit 3 rows
-                    
-                    Text("Lose weight")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.primary)
-                        .padding(.leading, 10)
-                        .padding(.top, 20)
-                    
-                    GeometryReader { geometry in
-                        let cellWidth = geometry.size.width / 2.4
-                        
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 10) { // Adjust spacing as needed
-                                ForEach(viewModel.relaxStretchItems, id: \.self) { item in
-                                    ExerciseHCell(image: item.icon, title: item.name, imageHeight: cellWidth)
-                                        .frame(width: cellWidth)
-                                }
-                            }
-                            .padding(.horizontal, 10) // Optional padding around the list
-                        }
+                    TrackableText(currentTitle: $currentTitle, title: "Picks for you")
+                    HorizontalListWithItems(
+                        items: viewModel.foryouItems,
+                        rows: foryouRows,
+                        cellWidth: UIScreen.main.bounds.width / 1.15,
+                        height: 360
+                    ) { item in
+                            ForYouHCell(image: item.icon, title: item.title, subTitle: item.subtitle ?? "")
                     }
-                    .frame(height: 220) // Adjust height to fit your content
                     
-                    Text("Belly fat burner")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.primary)
-                        .padding(.leading, 10)
-                        .padding(.top, 40)
+                    TrackableText(currentTitle: $currentTitle, title: "Lose weight")
+                    HorizontalScrollView(
+                        items: viewModel.relaxStretchItems,
+                        cellWidth: UIScreen.main.bounds.width / 2.4,
+                        height: 220
+                    ) { item in
+                        ExerciseHCell(image: item.icon, title: item.name, imageHeight: UIScreen.main.bounds.width / 2.4)
+                    }
+                    TrackableText(currentTitle: $currentTitle, title: "Belly fat burner")
+                    HorizontalListWithItems(
+                        items: viewModel.foryouItems,
+                        rows: bellyFatRows,
+                        cellWidth: UIScreen.main.bounds.width / 1.15,
+                        height: 240
+                    ) { item in
+                            ForYouHCell(image: item.icon, title: item.title, subTitle: item.subtitle ?? "")
+                    }
+                    TrackableText(currentTitle: $currentTitle, title: "Training Goal")
+                    HorizontalScrollView(
+                        items: viewModel.trainingGoalsItems,
+                        cellWidth: UIScreen.main.bounds.width / 2.5,
+                        height: 200
+                    ) { item in
+                        TrainingGoalCell(title: item.name, image: item.icon)
+                            .cornerRadius(10)
+                    }
                     
-                    GeometryReader{ geometry in
-                        let cellwidth = geometry.size.width / 1.15
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            LazyHGrid(rows: bellyFatRows, spacing: 10) {
-                                ForEach(viewModel.foryouItems, id: \.self) { item in
-                                    ForYouHCell(image: item.icon, title: item.title, subTitle: item.subtitle ?? "")
-                                        .frame(width: cellwidth)
+                    TrackableText(currentTitle: $currentTitle, title: "Body focus")
+//                    GeometryReader { geometry in
+//                        let cellWidth = geometry.size.width / 2.25
+//                        
+//                        LazyVGrid(columns: bellyFatRows, spacing: 10) { // Adjust spacing as needed
+//                            ForEach(viewModel.focusGridItems, id: \.self) { item in
+//                                BodyfocusCell(title: item.name, image: item.icon)
+//                                    .frame(width: cellWidth, height: cellWidth)
+//                            }
+//                        }
+//                        .padding() // Optional padding around the list
+//                    }
+//                    .frame(height: 400) // Adjust height to fit your content
+                    
+                    HorizontalListWithItems(
+                        items: viewModel.focusGridItems,
+                        rows: bellyFatRows,
+                        cellWidth: UIScreen.main.bounds.width / 2.25,
+                        height: 400
+                    ) { item in
+                        BodyfocusCell(title: item.name, image: item.icon, viewHeight: UIScreen.main.bounds.width / 2.25)
+                    }
+                    
+                    VStack{
+                        List{
+                            ForEach(viewModel.durationAndIntensityItems, id: \.self){ section in
+                                Section(header: Text(section.title ?? "No title").font(.title3).fontWeight(.semibold).foregroundStyle(Color.primary)) {
+                                    ForEach(section.items, id: \.self){item in
+                                        ProfileItemCell(item: item)
+                                    }
                                 }
                             }
-                            .padding(10)
+                            .textCase(nil) // Prevents the section header from being capitalized
                         }
-                        
-                    }.frame(height: 240) // Set the height to fit 3 rows
-                    
-                    Text("Lose weight")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.primary)
-                        .padding(.leading, 10)
-                        .padding(.top, 20)
-                    
-                    GeometryReader { geometry in
-                        let cellWidth = geometry.size.width / 2.5
-                        
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 10) { // Adjust spacing as needed
-                                ForEach(viewModel.trainingGoalsItems, id: \.self) { item in
-                                    TrainingGoalCell(title: item.name, image: item.icon)
-                                        .frame(width: cellWidth)
-                                        .cornerRadius(10)
-                                }
-                            }
-                            .padding(.horizontal, 10) // Optional padding around the list
-                        }
+                        .frame(height: 400)
+                        .listStyle(InsetGroupedListStyle()) // Optional: Customizes the list style to match iOS style
                     }
-                    .frame(height: 200) // Adjust height to fit your content
                     
-                    Text("Body focus")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.primary)
-                        .padding(.leading, 10)
-                        .padding(.top, 20)
-                    
-                    GeometryReader { geometry in
-                        let cellWidth = geometry.size.width / 2.25
-                        
-                        LazyVGrid(columns: bellyFatRows, spacing: 10) { // Adjust spacing as needed
-                            ForEach(viewModel.focusGridItems, id: \.self) { item in
-                                BodyfocusCell(title: item.name, image: item.icon)
-                                    .frame(width: cellWidth, height: cellWidth)
-                            }
-                        }
-                        .padding() // Optional padding around the list
-                    }
-                    .frame(height: 400) // Adjust height to fit your content
                 }
                 
             }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Text("Discover")
+                    Text(currentTitle)
                         .fontWeight(.semibold)
                         .font(.title2)
+                    // .animation(.smooth, value: currentTitle)
                 }
             }
         }
@@ -172,3 +136,5 @@ struct DiscoverScreen: View {
 #Preview {
     DiscoverScreen()
 }
+
+

@@ -106,6 +106,9 @@ struct TabButton: View{
 }
 
 struct CalenderView: View{
+    @StateObject private var viewModel = CalendarViewModel()
+    let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 7)
+    
     var body: some View{
         VStack{
             HStack{
@@ -117,25 +120,45 @@ struct CalenderView: View{
             }
             HStack{
                 Button(action: {
-                    //viewModel.changeMonth(by: -1) // Move to the previous month
+                    viewModel.changeMonth(by: -1) // Move to the previous month
                 }) {
                     Image(systemName: "chevron.left")
-                        .font(.title2)
+                        .foregroundColor(.black)
                         .padding()
                 }
                 Spacer()
-                Text("January")
-                    .font(.title2)
+                Text(viewModel.monthTitle)
+                    .font(.title3)
                 
                 Spacer()
                 Button(action: {
-                   // viewModel.changeMonth(by: 1) // Move to the next month
+                    viewModel.changeMonth(by: 1) // Move to the next month
                 }) {
                     Image(systemName: "chevron.right")
-                        .font(.title2)
+                        .foregroundColor(.black)
                         .padding()
                 }
+            }.padding()
+            
+            HStack{
+                ForEach(viewModel.weekdaySymbols, id: \.self){ day in
+                    Text(day)
+                        .fontWeight(.semibold)
+                        .font(.title2)
+                        .frame(maxWidth: .infinity)
+                }
             }
+            
+            LazyVGrid(columns: columns, spacing: 10) {
+                ForEach(viewModel.dates) { date in
+                    CalendarCellReport(date: date)
+                        .onTapGesture {
+                            viewModel.selectDate(date)
+                        }
+                }
+            }
+            .padding()
+            
         }
     }
 }
