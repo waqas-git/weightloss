@@ -2,7 +2,7 @@
 //  MyProfile+CoreDataProperties.swift
 //  weightloss
 //
-//  Created by waqas ahmed on 21/02/2025.
+//  Created by waqas ahmed on 24/02/2025.
 //
 //
 
@@ -16,10 +16,10 @@ extension MyProfile {
         return NSFetchRequest<MyProfile>(entityName: "MyProfile")
     }
 
-    @NSManaged public var currentWeight: Float
+    @NSManaged public var currentWeight: String?
     @NSManaged public var gender: String?
-    @NSManaged public var height: Float
-    @NSManaged public var targetWeight: Float
+    @NSManaged public var height: String?
+    @NSManaged public var targetWeight: String?
 
 }
 
